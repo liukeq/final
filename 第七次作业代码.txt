@@ -1,0 +1,75 @@
+%hw7_1
+
+clear ;
+I1=imread('E:\刘克勤\学习\大三下\数字图像处理\第7次作业\test1.bmp');
+I2=imread('E:\刘克勤\学习\大三下\数字图像处理\第7次作业\test2.png');
+I3=imread('E:\刘克勤\学习\大三下\数字图像处理\第7次作业\test3.jpg');
+I4=imread('E:\刘克勤\学习\大三下\数字图像处理\第7次作业\test4.bmp');
+I5=imread('E:\刘克勤\学习\大三下\数字图像处理\第7次作业\test5.png');
+I6=imread('E:\刘克勤\学习\大三下\数字图像处理\第7次作业\test6.jpg');
+S1=edge(I1,'sobel');
+S2=edge(I2,'sobel');
+S3=edge(I3,'sobel');
+S4=edge(I4,'sobel');
+S5=edge(I5,'sobel');
+S6=edge(I6,'sobel');
+subplot(231);imshow(S1);
+subplot(232);imshow(S2);
+subplot(233);imshow(S3);
+subplot(234);imshow(S4);
+subplot(235);imshow(S5);
+subplot(236);imshow(S6);
+
+%hw7_2&3
+
+I=I2;
+subplot(231),imshow(I)
+BW=edge(I,'canny');
+[H,T,R]=hough(BW);
+subplot(232),imshow(H,[],'XData',T,'YData',R,'InitialMagnification','fit');
+xlabel('\theta'),ylabel('\rho');
+axis on, axis normal,hold on;
+P=houghpeaks(H,5,'threshold',ceil(0.3*max(H(:))));
+x=T(P(:,2));y=R(P(:,1));
+plot(x,y,'s','color','white');
+lines=houghlines(BW,T,R,P,'FillGap',5,'MinLength',7);
+subplot(233),imshow(I),
+hold on;
+max_len=0;
+for k=1:length(lines)
+    xy=[lines(k).point1;lines(k).point2];
+    plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+    plot(xy(1,1),xy(1,2),'x','LineWidth',2,'Color','yellow');
+    plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red');
+    len=norm(lines(k).point1-lines(k).point2);
+    if(len>max_len)
+        max_len=len;
+        xy_long=xy;
+    end
+end
+plot(xy_long(:,1),xy_long(:,2),'LineWidth',2,'Color','cyan')
+
+BW=edge(I,'sobel');
+[H,T,R]=hough(BW);
+subplot(235),imshow(H,[],'XData',T,'YData',R,'InitialMagnification','fit');
+xlabel('\theta'),ylabel('\rho');
+axis on, axis normal,hold on;
+P=houghpeaks(H,5,'threshold',ceil(0.3*max(H(:))));
+x=T(P(:,2));y=R(P(:,1));
+plot(x,y,'s','color','white');
+lines=houghlines(BW,T,R,P,'FillGap',5,'MinLength',7);
+subplot(236),imshow(I),
+hold on;
+max_len=0;
+for k=1:length(lines)
+    xy=[lines(k).point1;lines(k).point2];
+    plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+    plot(xy(1,1),xy(1,2),'x','LineWidth',2,'Color','yellow');
+    plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red');
+    len=norm(lines(k).point1-lines(k).point2);
+    if(len>max_len)
+        max_len=len;
+        xy_long=xy;
+    end
+end
+plot(xy_long(:,1),xy_long(:,2),'LineWidth',2,'Color','cyan')
